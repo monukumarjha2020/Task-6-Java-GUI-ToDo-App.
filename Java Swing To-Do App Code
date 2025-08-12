@@ -1,0 +1,69 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ToDoApp extends JFrame {
+    private DefaultListModel<String> taskListModel;
+    private JList<String> taskList;
+    private JTextField taskField;
+
+    public ToDoApp() {
+        setTitle("To-Do List App");
+        setSize(400, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Layout
+        setLayout(new BorderLayout());
+
+        // Task list model and list
+        taskListModel = new DefaultListModel<>();
+        taskList = new JList<>(taskListModel);
+        add(new JScrollPane(taskList), BorderLayout.CENTER);
+
+        // Panel for input and buttons
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new FlowLayout());
+
+        taskField = new JTextField(20);
+        JButton addButton = new JButton("Add Task");
+        JButton deleteButton = new JButton("Delete Task");
+
+        // Add task action
+        addButton.addActionListener(e -> {
+            String task = taskField.getText().trim();
+            if (!task.isEmpty()) {
+                taskListModel.addElement(task);
+                taskField.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter a task.");
+            }
+        });
+
+        // Delete task action
+        deleteButton.addActionListener(e -> {
+            int selectedIndex = taskList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                taskListModel.remove(selectedIndex);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a task to delete.");
+            }
+        });
+
+        // Add components to input panel
+        inputPanel.add(taskField);
+        inputPanel.add(addButton);
+        inputPanel.add(deleteButton);
+
+        // Add panel to frame
+        add(inputPanel, BorderLayout.SOUTH);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            ToDoApp app = new ToDoApp();
+            app.setVisible(true);
+        });
+    }
+}
